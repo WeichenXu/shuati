@@ -44,13 +44,12 @@ private:
 
 int main(){
     deque<int> dq;
-    dq.push_back(0);
-    dq.push_back(1);
-    dq.pop_back();
-    std::cout << dq[0] << std::endl;
-    dq.push_front(-1);
-    std::cout << dq[1] << std::endl;
-    dq.pop_front();
-    std::cout << dq[0] << std::endl;
+    for (int i=0; i<10; ++i){
+        dq.push_back(i);
+        dq.push_front(-i);
+    }
+    for (int i=0; i<20; ++i){
+        std::cout<< dq[i] << std::endl; 
+    }
     return 0;
 }

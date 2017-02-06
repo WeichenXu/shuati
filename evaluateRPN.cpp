@@ -118,6 +118,7 @@ public:
 private:
     shared_ptr<Operations> op_{nullptr};
     void setOp(char op, int left, int right){
+        // TODO: Add support for minus, multiply and divide
         switch(op){
             case '+':
                 op_ = make_shared<PlusOperations>(left, right);

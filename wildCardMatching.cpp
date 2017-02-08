@@ -2,6 +2,7 @@
 #include <vector>
 #include <cassert>
 
+// Solution 1:
 // use dp solution
 // matched[i][j] = p[i] match s[j]
 //          s
@@ -18,6 +19,13 @@
 
 // Optimization
 //   Since we only need to update the last row elements, we could use only one row to store
+
+// Solution 2:
+// Two pointers:
+// 1. s[i] == p[j] || p[j] == '?'
+//    ++i, ++j
+// 2. if p[j] == '*'
+// 2. else, consider about '*'
 
 using namespace std;
 
@@ -50,6 +58,34 @@ public:
 
         return dp[sLen];
     }
+
+    bool isMatchII(string s, string p){
+        int i=0, j=0;
+        int start = -1, lastMatch = -1;
+        int lenS = s.length(), lenP = p.length();
+        while(i < lenS){
+            // if s[i] == p[j] || p[j] == '?'
+            if (j<lenP && (s[i] == p[j] || p[j] == '?')){
+                ++i, ++j;
+            }
+            else if (j<lenP && p[j] == '*'){
+                start = j++;
+                lastMatch = i;
+            }
+            else if (start >= 0){
+                j = start+1;
+                i = ++lastMatch;
+            }
+            else{
+                return false;
+            }
+        }
+        // remove all the remaining '*' in p
+        while(j < lenP && p[j] == '*'){
+            ++j;
+        }
+        return i == lenS && j == lenP;
+    }
 };
 
 int main(){
@@ -57,17 +93,17 @@ int main(){
     string str1 = "aab", str2 = "", str3 = "zacabz";
     string pat1 = "*", pat2="*ba", pat3="*b", pat4="aab", pat5="*a?b*";
     // test for str1
-    //assert(sol.isMatch(str1, pat1) == true);
-    //assert(sol.isMatch(str1, pat2) == false);
-    //assert(sol.isMatch(str1, pat3) == true);
-    //assert(sol.isMatch(str1, pat4) == true);
+    assert(sol.isMatchII(str1, pat1) == true);
+    assert(sol.isMatchII(str1, pat2) == false);
+    assert(sol.isMatchII(str1, pat3) == true);
+    assert(sol.isMatchII(str1, pat4) == true);
     
     // test for str2
-    //assert(sol.isMatch(str2, pat1) == true);
-    //assert(sol.isMatch(str2, pat3) == false);
+    assert(sol.isMatchII(str2, pat1) == true);
+    assert(sol.isMatchII(str2, pat3) == false);
 
     // test for str3
-    assert(sol.isMatch(str3, pat5) == false);
+    assert(sol.isMatchII(str3, pat5) == false);
     return 0;
 }
 

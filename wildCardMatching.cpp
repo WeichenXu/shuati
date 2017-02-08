@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <tuple>
 #include <cassert>
 
 // Solution 1:
@@ -92,6 +93,14 @@ int main(){
     Solution sol;
     string str1 = "aab", str2 = "", str3 = "zacabz";
     string pat1 = "*", pat2="*ba", pat3="*b", pat4="aab", pat5="*a?b*";
+    vector<tuple<string, string, bool>> test_cases = {
+        {"aab", "*", true},
+        {"aab", "*ba", false}
+    };
+
+    for (const auto& t:test_cases){
+        assert(sol.isMatchII(get<0>(t), get<1>(t)) == get<2>(t));
+    }
     // test for str1
     assert(sol.isMatchII(str1, pat1) == true);
     assert(sol.isMatchII(str1, pat2) == false);

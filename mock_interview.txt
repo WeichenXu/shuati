@@ -1,0 +1,6 @@
+introduce about yourself
+
+1. height of the tree, recursive & itrative
+2. evaluate reverse polish equation, 
+    a. what if we want to change the operator
+    

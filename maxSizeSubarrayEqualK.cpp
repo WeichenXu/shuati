@@ -6,6 +6,7 @@
 //    <sum[0 to index], index list in ascending order>
 // 2. find the max (j-i+1) by iterating
 
+// optimize: we could use only single iteration
 using namespace std;
 
 class Solution {
@@ -14,31 +15,20 @@ public:
         using map_t = unordered_map<int, int>;
         map_t m;
 
-        // 1. build the dictionary
-        m[0] = -1;
+        // calculate the current sum and try to find farthest match 
+        int sum = 0, res = 0;
         for (int i=0; i<nums.size(); ++i){
-            int curSum = 0;
-            if (!i){
-                curSum = nums[i];
+            sum += nums[i];
+            if (m.find(sum) == m.end()){
+                m[sum] = i;
             }
-            else {
-                curSum = nums[i-1] + nums[i];
+            if (sum == k){
+                res = i+1;
             }
-            nums[i] = curSum;
-            if (m.find(curSum) == m.end()){
-                m[curSum] = i;
-                //cout << "Insert sum " << curSum << ", at index " << i << endl;
+            else if (m.find(sum - k) != m.end()){
+                res = max(res, i-m[sum-k]);
             }
         }
-        // 2. find the max gap
-        int res = 0;
-        for (int i=nums.size()-1; i>=0; --i){
-            int pair = nums[i]-k;
-            if (m.find(pair) != m.end()){
-                res = max(res, i - m[pair]);
-            }
-        }
-
         return res;
     }
 };

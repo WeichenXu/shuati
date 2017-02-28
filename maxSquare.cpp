@@ -27,14 +27,8 @@ public:
                     // if the NW element also construct a square
                     int extend = 0;
                     if (i-1 >=0 && j-1 >= 0){
-                        extend = matrix[i-1][j-1]-zero;
-                    }
-                    // whether the extended area are '1's
-                    for (int k=0; k<extend; ++k){
-                        if (matrix[i][j-1-k] <= zero || matrix[i-1-k][j] <= zero){
-                            extend = k;
-                            break;
-                        }
+                        extend = min(matrix[i-1][j-1], min( matrix[i-1][j], matrix[i][j-1]) ) - zero;
+                        cout << "i: " << i << ", j: " << j << ", max sub: " << extend<<endl;
                     }
                     cur = zero + extend + 1;
                     res = max(res, cur);

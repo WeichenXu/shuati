@@ -18,15 +18,18 @@ using namespace std;
 
 class Solution {
 public:
-    // 1. recursive
+    // 1. iteration
     TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
-        if (root == nullptr){
-            return root;
+        auto* suc = nullptr;
+        while (root != nullptr){
+            if (p->val < root->val){
+                suc = root;
+                root = root->left;
+            }
+            else{
+                root = root->right;
+            }
         }
-        if (p->val >= root->val){
-            return inorderSuccessor(root->right, p);
-        }
-        auto* l = inorderSuccessor(root->left, p);
-        return l == nullptr ? root : l;
+        return suc;
     }
 };

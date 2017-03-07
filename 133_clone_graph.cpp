@@ -15,8 +15,9 @@ using namespace std;
  */
 
 // Two iterations
-// 1. copy all the new nodes, keep map between <origin node*, copy node*>
-// 2. iterate all new nodes, relink the neighbors
+// 1. BFS
+// 2. DFS
+
 struct UndirectedGraphNode {
   int label;
   vector<UndirectedGraphNode *> neighbors;
@@ -25,32 +26,18 @@ struct UndirectedGraphNode {
 
 class Solution {
 public:
+    unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> m;
     UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
-        unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> m;
-        queue<UndirectedGraphNode*> q;
         if (node == nullptr){
             return node;
         }
-        
-        // First iteration
-        q.push(node);
-        auto* copy = new UndirectedGraphNode(node->label);
-        m[node] = copy;
-        while(! q.empty()){
-            auto* cur = q.front();
-            q.pop();
-            // Iterate all the neighbors 
-            for (auto* nb:cur->neighbors){
-                if (m.find(nb) == m.end()){
-                    q.push(nb);
-                    copy = new UndirectedGraphNode(nb->label);
-                    m[nb] = copy;
-                }
-                // copy the link
-                m[cur]->neighbors.push_back(m[nb]);  
+        if (m.find(node) == m.end()){
+            auto* copy = new UndirectedGraphNode(node->label);
+            m[node] = copy;
+            for (auto* nb:node->neighbors){
+                copy->neighbors.push_back(cloneGraph(nb));
             }
         }
-        
         return m[node];
     }
 };

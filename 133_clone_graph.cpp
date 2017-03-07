@@ -34,27 +34,23 @@ public:
         
         // First iteration
         q.push(node);
+        auto* copy = new UndirectedGraphNode(node->label);
+        m[node] = copy;
         while(! q.empty()){
             auto* cur = q.front();
             q.pop();
-            auto* copy = new UndirectedGraphNode(cur->label);
-            m[cur] = copy;
             // Iterate all the neighbors 
             for (auto* nb:cur->neighbors){
                 if (m.find(nb) == m.end()){
                     q.push(nb);
+                    copy = new UndirectedGraphNode(nb->label);
+                    m[nb] = copy;
                 }
+                // copy the link
+                m[cur]->neighbors.push_back(m[nb]);  
             }
         }
-
-        // Second iteration
-        for (auto it:m){
-            auto* origin = it.first, * copy = it.second;
-            for (auto* nb:origin->neighbors){
-                copy->neighbors.push_back(m[nb]);
-            }
-        }
-
+        
         return m[node];
     }
 };

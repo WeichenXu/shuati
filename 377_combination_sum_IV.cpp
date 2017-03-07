@@ -9,24 +9,27 @@ using namespace std;
 class Solution {
 public:
     int combinationSum4(vector<int>& nums, int target) {
-        sort(nums.begin(), nums.end());
+        dp.resize(target+1);
+        fill(dp.begin(), dp.end(), -1);
+        dp[0] = 1;
         helper(nums, target);
-        return res;
+        return dp[target];
     }
 
 private:
-    void helper(vector<int>& nums, int target){
-        if(!target){
-            ++res;
+    int helper(vector<int>& nums, int target){
+        if(dp[target] == -1){
+            int sum = 0;
+            for (int i=0; i<nums.size(); ++i){
+                if (target >= nums[i]){
+                    sum += helper(nums, target-nums[i]);
+                }
+            }
+            dp[target] = sum;
         }
-        if (target < 0){
-            return;
-        }
-        for (int i=0; i<nums.size(); ++i){
-            helper(nums, target-nums[i]);
-        }
+        return dp[target];
     }
-    int res;
+    vector<int> dp;
 };
 
 int main(){

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <numeric>
 
 #include <vector>
 #include <unordered_map>
@@ -7,31 +8,32 @@
 // 2. return the possible combination 
 
 // DP: maintain current combination to i
+// sum(positive) - sum(negative) = target + sum(nums), sum(positive) = sum - sum(negative)
+// 2*sum(positive) = target + sum
+
 using namespace std;
 
 class Solution {
 public:
     int findTargetSumWays(vector<int>& nums, int S) {
-        int size = nums.size(), res = 0;
-        unordered_map<int, int> m, nx;
-        m[nums[0]] += 1;
-        m[-nums[0]] += 1; 
-        // iterate all possible combination, bit 0 = +, 1 = -
-        for (int i=1; i < size; ++i){
-            nx.clear();
-            for (auto it = m.begin(); it != m.end(); ++it){
-                nx[it->first + nums[i]] += m[it->first];
-                nx[it->first - nums[i]] += m[it->first];
+       int sum = accumulate(nums.begin(), nums.end(), 0);
+       return ((sum+S)&0x1 || S>sum) ? 0 : targetSet(nums, (sum+S)>>1 ); 
+    }
+private:
+    int targetSet(vector<int>& nums, int t){
+        int dp[t+1];
+        dp[0] = 1;
+        for (auto num:nums){
+            for (int i=t; i>=num; --i){
+                dp[i] += dp[i-num];
             }
-            swap(m, nx);
         }
-        
-        return m[S];
+        return dp[t];
     }
 };
 
 int main(){
-    vector<int> nums = {1, 1 ,1, 1, 1};
+    vector<int> nums = {1,1,1,1,1};
     int S = 3;
     Solution sol;
     auto res = sol.findTargetSumWays(nums, S);

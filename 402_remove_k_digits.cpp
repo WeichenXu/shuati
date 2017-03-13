@@ -1,32 +1,48 @@
 #include <iostream>
 #include <string>
+#include <stack>
 
 #include <cassert>
 
-// using Greedy way
-// remove the largest digit in subarray, which is monolithic (increasing), for k steps
+// 1. using Greedy way
+//    remove the largest digit in subarray, which is monolithic (increasing)
+//    for k steps
 
+// 2. using Stack
+//    push the element if >=
+//    pop if larger than current element for k times
 using namespace std;
 
 class Solution {
 public:
     string removeKdigits(string num, int k) {
-        // remove the "peak" element
+        stack<int> s;
+        // push the elements into the stack
+        for (int i=0; i<num.size(); ++i){
+            while(!s.empty() && s.top()>num[i] && k){
+                s.pop();
+                --k;
+            } 
+            s.push(num[i]);
+        }
+        // remove remaining elements
         while(k){
-            int size = num.size(), i = 0;
-            while (i+1 < size && num[i] <= num[i+1]){
-                ++i;
-            }
-            num.erase(i, 1);
+            s.pop();
             --k;
         }
-        // remove the leading zeros
-        int i = 0, n = num.size();
-        while (i < n && num[i] == '0'){
+        string res;
+        while(!s.empty()){
+            res += s.top();
+            s.pop();
+        }
+        reverse(res.begin(), res.end());
+        // remove leading zeros
+        int i=0;
+        while(i < res.length() && res[i] == '0'){
             ++i;
         }
-        num.erase(0, i);
-        return num.empty() ? "0":num;
+        res.erase(0, i);
+        return res.empty() ? "0":res;
     }
 };
 

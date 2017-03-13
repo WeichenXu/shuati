@@ -11,24 +11,22 @@ using namespace std;
 class Solution {
 public:
     string removeKdigits(string num, int k) {
-        for (int i=0; i<k; ++i){
-            if (num.size() < 2)    return "0";
-            // locate the increasing subarray
-            int j = 1;
-            while(j < num.length() && num[j] >= num[j-1]){
-                ++j;
+        // remove the "peak" element
+        while(k){
+            int size = num.size(), i = 0;
+            while (i+1 < size && num[i] <= num[i+1]){
+                ++i;
             }
-            // erase the largest element
-            num.erase(j-1, 1);
-            // remove leading 0s
-            j=0;
-            while(j < num.length() && num[j] == '0'){   
-                ++j; 
-            }
-            num.erase(0, j);
+            num.erase(i, 1);
+            --k;
         }
-        if (num.empty()) num = "0";
-        return num;
+        // remove the leading zeros
+        int i = 0, n = num.size();
+        while (i < n && num[i] == '0'){
+            ++i;
+        }
+        num.erase(0, i);
+        return num.empty() ? "0":num;
     }
 };
 

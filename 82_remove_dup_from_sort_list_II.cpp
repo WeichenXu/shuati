@@ -14,24 +14,8 @@ struct ListNode {
 class Solution {
 public:
     // 1. recursive: remove any duplicate at beginning
+    // 2. iterative:
     ListNode* deleteDuplicates(ListNode* head) {
-        if (head == nullptr || head->next == nullptr){
-            return head;
-        }
-        auto *origin = head;
-        while (head->next && head->next->val == head->val){
-            head = head->next;
-        }
-        //cout << (void*) origin << ", " << (void*) head << endl;
-        if (origin != head){
-            head = head->next;
-        }
-        else{
-            head->next = deleteDuplicates(head->next);
-            return head;
-        }
-        //cout << "head find dups, now head is " << head->val << endl;
-        return deleteDuplicates(head);
     }
     
     void printList(ListNode* head){

@@ -11,33 +11,20 @@
 class Solution {
 public:
     void flatten(TreeNode* root) {
-        helper(root);
-        while (root != nullptr)
+        // use post-order
+        if (root == nullptr)
         {
-            root -> left = nullptr;
+            return;
+        }
+        flatten(root->left);
+        flatten(root->right);
+        auto* tmp = root->right;
+        root->right = root->left;
+        root->left = nullptr;
+        while (root->right != nullptr)
+        {
             root = root->right;
         }
-    }
-    pair<TreeNode*, TreeNode*> helper(TreeNode* cur)
-    {
-        if (cur == nullptr)
-        {
-            return {nullptr, nullptr};
-        }
-        auto* last = cur;
-        const auto& pLeft = helper(cur->left);
-        auto* right = cur->right;
-        if (pLeft.first != nullptr)
-        {
-            cur->right = pLeft.first;
-            last = pLeft.second;
-        }
-        const auto& pRight = helper(right);
-        if (pRight.second != nullptr)
-        {
-            last->right = pRight.first;
-            last = pRight.second;
-        }
-        return {cur, last};
+        root->right = tmp;
     }
 };

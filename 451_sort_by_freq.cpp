@@ -11,18 +11,15 @@ public:
         unordered_map<char, int> cnt;
         map<int, unordered_set<char>> dict;
         // 1. get a sorted mapping {cnt -> char array}
+        // 1.1 count occurance of each char
+        // 1.2 sort with occurance
         for (const auto ch:s)
         {
-            auto it = cnt.find(ch);
-            if (it == cnt.end())
-            {
-                it = cnt.insert({ch, 0}).first;
-                dict[0].insert(ch);
-            }
-            auto prev = it->second;
-            cnt[ch] = prev+1;
-            dict[prev].erase(ch);
-            dict[prev+1].insert(ch);
+            cnt[ch]++;
+        }
+        for (auto& itr:cnt)
+        {
+            dict[itr.second].insert(itr.first); 
         }
         string res = "";
         // 2. concatenate as a string, then reverse

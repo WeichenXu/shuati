@@ -7,46 +7,53 @@ using namespace std;
 class Solution {
 public:
     bool canPartition(vector<int>& nums) {
-        // find whether we could make sum/2 combination
-        auto sum = accumulate(nums.begin(), nums.end(), 0);
-        if (sum % 2)
+        int sum = accumulate(nums.begin(), nums.end(), 0);
+        if (sum%2)  return false;
+        sum = sum/2;
+        sort(nums.begin(), nums.end());
+        int size = 0;
+        for (int i=0; i<nums.size(); ++i)
         {
-            return false;
-        }
-        size_t size = nums.size();
-
-        // sort nums for early return
-        // sort(nums.begin(), nums.end());
-        bool dp[size+1][sum/2+1];
-        memset(dp, false, sizeof(bool)*(size+1)*(sum/2+1));
-        int too_large=size;
-        for (int i=1; i<=too_large; ++i)
-        {
-            for (int j=0;j<=sum/2; ++j)
+            if (nums[i] <= sum)
             {
-                if (!j)
+                ++size;
+            }
+        }
+        cout << size << endl;
+        vector<bool> prev(sum+1, false);
+        prev[0] = true;
+        vector<bool> cur(sum+1, false);
+        for (int i=1; i<=size; ++i)
+        {
+            fill(cur.begin(), cur.end(), false);
+            for (int j=0; j<=sum; ++j)
+            {
+                cur[j] = prev[j];
+                if (j >= nums[i])
                 {
-                    dp[i][j] = true;
+                    cur[j] = cur[j] | prev[j-nums[i]];
                 }
-                else
+                if (j == sum && cur[j])
                 {
-                    dp[i][j] |= dp[i-1][j];
-                    if (j>=nums[i]){
-                        dp[i][j] |= dp[i-1][j-nums[i]];
-                    }
+                    return true;
                 }
-                cout << dp[i][j] << " ";
+            }
+            for (auto n:cur)
+            {
+                cout << n << " ";
             }
             cout << endl;
+            swap(cur, prev);
         }
-        return dp[size][sum/2];
+        return false;
     }
 };
 
 int main()
 {
     Solution sol;
-    vector<int> nums = {1,2,3,5};
+    vector<int> nums = {1,2,4,5};
+    //vector<int> nums = {1,2,5};
     cout << sol.canPartition(nums) << endl;
     return 0;
 }

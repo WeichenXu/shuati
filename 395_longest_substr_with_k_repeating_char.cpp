@@ -4,7 +4,6 @@
 using namespace std;
 
 // Divide and conquer
-
 class Solution {
 public:
     int longestSubstring(string s, int k) {
